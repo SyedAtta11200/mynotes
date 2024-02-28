@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 // import 'package:mynotes/firebase_options.dart';
-import 'dart:developer' as devtools show log;
-
+// import 'dart:developer' as devtools show log;
 import 'package:mynotes/constants/routs.dart';
+import 'package:mynotes/utilities/show_error_dialog.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -66,13 +66,26 @@ class _LoginViewState extends State<LoginView> {
                 );
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'user-not-found') {
-                  devtools.log('No user found.');
+                  await showErrorDialog(
+                    context,
+                    "User-not-found",
+                  );
                 } else if (e.code == 'wrong-password') {
-                  devtools.log('Wrong password provided for that user.');
+                  await showErrorDialog(
+                    context,
+                    "Wrong-password",
+                  );
                 } else {
-                  devtools.log('Something went wrong.');
-                  devtools.log(e.code);
+                  await showErrorDialog(
+                    context,
+                    "Error: ${e.code}",
+                  );
                 }
+              } catch (e) {
+                await showErrorDialog(
+                  context,
+                  "Error: ${e.toString()}",
+                );
               }
             },
             child: const Text("Login"),
